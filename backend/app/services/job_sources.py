@@ -2,7 +2,7 @@ import requests
 from typing import List, Dict, Optional
 
 
-# This function makes sure every job has the same structure
+# Keeps every scraped job in the same format
 def normalize_job(
     title: str,
     company: str,
@@ -21,22 +21,24 @@ def normalize_job(
     }
 
 
-# Fetch remote jobs from Remotive API
+# Fetch jobs from Remotive API
 def fetch_remotive_jobs(limit: int = 10, category: Optional[str] = None) -> List[Dict]:
     url = "https://remotive.com/api/remote-jobs"
 
-    response = requests.get(url, timeout=20)
-    response.raise_for_status()
+    try:
+        response = requests.get(url, timeout=20)
+        response.raise_for_status()
+        data = response.json()
+    except Exception as e:
+        print(f"Remotive fetch failed: {e}")
+        return []
 
-    data = response.json()
     jobs = data.get("jobs", [])
-
     results = []
 
     for job in jobs:
         job_category = (job.get("category") or "").lower()
 
-        # Optional filter by category
         if category and category.lower() not in job_category:
             continue
 
@@ -62,15 +64,14 @@ def fetch_greenhouse_jobs(board_token: str, limit: int = 10) -> List[Dict]:
     url = f"https://boards-api.greenhouse.io/v1/boards/{board_token}/jobs"
 
     try:
-    response = requests.get(url, timeout=20)
-    response.raise_for_status()
-except Exception as e:
-    print(f"Remotive fetch error: {e}")
-    return []
+        response = requests.get(url, timeout=20)
+        response.raise_for_status()
+        data = response.json()
+    except Exception as e:
+        print(f"Greenhouse fetch failed for {board_token}: {e}")
+        return []
 
-    data = response.json()
     jobs = data.get("jobs", [])
-
     results = []
 
     for job in jobs[:limit]:
@@ -88,23 +89,14 @@ except Exception as e:
     return results
 
 
-# Combine jobs from all current sources
+# Combines all current job sources
 def fetch_all_jobs() -> List[Dict]:
     all_jobs: List[Dict] = []
 
-    # Source 1: Remotive
-    try:
-        all_jobs.extend(fetch_remotive_jobs(limit=15))
-    except Exception as e:
-        print(f"Remotive fetch failed: {e}")
+    all_jobs.extend(fetch_remotive_jobs(limit=10))
 
-    # Source 2: Greenhouse
     greenhouse_boards = ["hubspot", "stripe"]
-
     for board in greenhouse_boards:
-        try:
-            all_jobs.extend(fetch_greenhouse_jobs(board_token=board, limit=10))
-        except Exception as e:
-            print(f"Greenhouse fetch failed for {board}: {e}")
+        all_jobs.extend(fetch_greenhouse_jobs(board_token=board, limit=5))
 
     return all_jobs
