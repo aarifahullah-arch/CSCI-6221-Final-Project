@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.routes.jobs import router as jobs_router 
 
 app = FastAPI(
     title="Job Matcher Backend",
@@ -15,3 +16,5 @@ def root():
 @app.get("/health")
 def health_check():
     return {"status": "ok"}
+# Connect jobs route
+app.include_router(jobs_router, prefix="/jobs", tags=["Jobs"])
