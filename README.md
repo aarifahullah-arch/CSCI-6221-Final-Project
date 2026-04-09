@@ -1,5 +1,5 @@
-# CSCI-6221-Final-Project
-Advanced Software Paradigms Final Project
+# CSCI 6221 Advanced Software Paradigms Final Project
+**Professor** Yih-Feng Hwang
 
 ---
 
@@ -43,9 +43,27 @@ Open `http://localhost:3000` in your browser.
 
 ---
 
+**Team members**
 
-Job Scraping Contribution – Innocent Gwara
+<p>Bilal Raza, Aarifah Ullah, Raina Jacob, Innocent Gwara, Saviour Msopa, Emmanuel Mkandawire</p>
 
+## Contributions
+
+### Bilal Raza
+
+[TODO]
+
+### Aarifah Ullah
+
+[TODO]
+
+### Raina Jacob
+
+[TODO]
+
+### Innocent Gwara
+
+**Job Scraping**
 I implemented the backend job scraping module for the project.
 I built a Python-based scraping service (job_sources.py)
 Integrated external job APIs:
@@ -68,3 +86,11 @@ Each job is returned as:
   "url": "...",
   "source": "..."
 }
+
+### Saviour Msopa
+
+[TODO]
+
+### Emmanuel Mkandawire
+
+[TODO]
