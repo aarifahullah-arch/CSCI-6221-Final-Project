@@ -1,4 +1,5 @@
 import os
+import re
 import hashlib
 import chromadb
 from chromadb import Search, K, Knn
@@ -43,6 +44,12 @@ def get_embedding(text):
     )
     return response.data[0].embedding
 
+def strip_html(text: str) -> str:
+    """Remove HTML tags and normalize whitespace."""
+    text = re.sub(r'<[^>]+>', ' ', text)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
+
 def generate_job_id(job):
     unique_string = f"{job['title']}_{job['company']}_{job['url']}"
     return hashlib.md5(unique_string.encode()).hexdigest()
@@ -68,8 +75,9 @@ def upsert_jobs(jobs):
     for job in new_jobs:
         ids.append(job["id"])
 
-        # Combine fields into searchable text
-        doc = f"{job['title']} {job['company']} {job['description']}"
+        # Strip HTML and truncate description to stay within ChromaDB quota
+        clean_desc = strip_html(job.get('description', ''))[:400]
+        doc = f"{job['title']} {job['company']} {clean_desc}"
         documents.append(doc)
 
         # Store structured metadata
@@ -104,8 +112,10 @@ def search_jobs(resume_text, n_results=10, location=None):
     if location:
         search = search.where(K("location") == location)
 
+    resume_embedding = get_embedding(resume_text)
+
     result = collection.search(
-        search.rank(Knn(query=resume_text))
+        search.rank(Knn(query=resume_embedding))
     )
 
     rows = result.rows()[0]

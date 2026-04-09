@@ -45,6 +45,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 const ACCEPTED_MIME = "application/pdf";
 const ACCEPTED_EXT  = ".pdf";
@@ -62,12 +63,13 @@ export default function ResumeUpload({
   maxSizeMB = 5,
 }) {
   const [file, setFile]           = useState(null);
-  const [status, setStatus]       = useState("idle");  
+  const [status, setStatus]       = useState("idle");
   const [error, setError]         = useState("");
   const [isDragging, setIsDragging] = useState(false);
-  const [preview, setPreview]     = useState(null); 
+  const [preview, setPreview]     = useState(null);
 
   const fileInputRef = useRef(null);
+  const router = useRouter();
 
 
   const validateFile = useCallback((candidate) => {
@@ -145,10 +147,15 @@ export default function ResumeUpload({
         throw new Error(json.message ?? `Server error ${response.status}`);
       }
 
-      // Backend must return data.filename and data.extractedText
+      const matches = json.data?.matches ?? [];
+
+      // Save matches to localStorage so rankings page can read them
+      localStorage.setItem("jobMatches", JSON.stringify(matches));
+
       setPreview({
         filename:      json.data?.filename      ?? file.name,
         extractedText: json.data?.extractedText ?? "(No text returned from server)",
+        matches,
       });
       setStatus("preview");
 
@@ -244,15 +251,19 @@ export default function ResumeUpload({
 
       {/* ── Preview panel (shown after successful upload) ──────── */}
       {status === "preview" && preview && (
-        <PreviewPanel preview={preview} onReset={reset} />
+        <PreviewPanel
+          preview={preview}
+          onReset={reset}
+          onViewMatches={() => router.push("/rankings")}
+        />
       )}
 
     </div>
   );
 }
 
-function PreviewPanel({ preview, onReset }) {
-  const { filename, extractedText } = preview;
+function PreviewPanel({ preview, onReset, onViewMatches }) {
+  const { filename, extractedText, matches = [] } = preview;
 
   const isTruncated = extractedText.length > MAX_PREVIEW_CHARS;
   const displayText = isTruncated
@@ -283,6 +294,13 @@ function PreviewPanel({ preview, onReset }) {
           </p>
         )}
       </div>
+      {/* View rankings */}
+      {matches.length > 0 && (
+        <button style={s.viewMatchesBtn} onClick={onViewMatches}>
+          View Job Matches →
+        </button>
+      )}
+
       {/* Reset */}
       <button style={s.resetBtn} onClick={onReset}>
         ↩ Upload a different resume
@@ -380,6 +398,9 @@ const s = {
                      maxHeight: 320, overflowY: "auto", margin: 0,
                      fontFamily: "'Courier New', monospace" },
   truncateNote:    { fontSize: "0.75rem", color: "#9ca3af", margin: 0 },
+  viewMatchesBtn:  { background: "#6366f1", color: "#fff", border: "none",
+                     padding: "10px 20px", borderRadius: 8, cursor: "pointer",
+                     fontSize: "0.95rem", fontWeight: 600, alignSelf: "flex-start" },
   resetBtn:        { background: "none", border: "1.5px solid #d1d5db",
                      color: "#6b7280", padding: "8px 16px", borderRadius: 7,
                      cursor: "pointer", fontSize: "0.875rem", alignSelf: "flex-start" },

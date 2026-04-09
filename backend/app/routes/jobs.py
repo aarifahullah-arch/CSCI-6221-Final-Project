@@ -15,6 +15,6 @@ def get_jobs():
 async def match_jobs(file: UploadFile = File(...)):
     contents = await file.read()
 
-    results = run_job_match_pipeline(contents)
+    results = run_job_match_pipeline(contents, file.filename)
 
     return results
