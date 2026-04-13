@@ -28,15 +28,30 @@ export async function POST(request) {
       );
     }
 
-    // Transform matches: ChromaDB returns distance scores (lower = better match)
-    // so we invert: matchScore = (1 - distance) * 100
-    const matches = (backendData.matches ?? []).map((job, index) => ({
-      id: job.id ?? String(index),
-      title: job.title,
-      company: job.company,
-      location: job.location,
-      url: job.url ?? "",
-      matchScore: Math.round((1 - (job.score ?? 1)) * 100),
+    // ChromaDB returns cosine distance scores (lower = better match).
+    // Raw distances from OpenAI embeddings typically sit in the 0.4–0.8 range
+    // even for strong matches, so a simple (1 - distance) always looks low.
+    //
+    // Instead we use relative normalization:
+    //   - best match  → 90%
+    //   - worst match → 30%
+    //   - others spread proportionally between them
+    //
+    // This honestly reflects how well each job ranks relative to the others
+    // without artificially inflating every result.
+    const rawMatches = backendData.matches ?? [];
+    const distances  = rawMatches.map(j => j.score ?? 1);
+    const best  = Math.min(...distances);
+    const worst = Math.max(...distances);
+    const range = worst - best || 0.001; // avoid divide-by-zero if all scores identical
+
+    const matches = rawMatches.map((job, index) => ({
+      id:         job.id ?? String(index),
+      title:      job.title,
+      company:    job.company,
+      location:   job.location,
+      url:        job.url ?? "",
+      matchScore: Math.round(90 - ((job.score - best) / range) * 60),
     }));
 
     // Build a readable summary from contact_info since the pipeline

@@ -47,6 +47,9 @@ export default function WebsiteHome({
           <button style={s.navButtonPrimary} onClick={handleRankings}>
             Job Rankings
           </button>
+          <div style={s.navDivider} />
+          <button style={s.navButtonSecondary}>Log In</button>
+          <button style={s.navButtonPrimary}>Sign Up</button>
         </div>
       </nav>
 
@@ -174,6 +177,7 @@ const s = {
   navLinks: { display: "flex", gap: "10px", alignItems: "center" },
 
   navLink: { textDecoration: "none", color: "black" },
+  navDivider: { width: 1, height: 24, background: "#ddd", margin: "0 4px" },
 
   navButtonPrimary: {
     background: "black",
