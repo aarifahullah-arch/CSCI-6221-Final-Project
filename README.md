@@ -5,14 +5,37 @@
 
 ## Running Locally
 
+**One-time only**
+
+```bash
+# cd to main directory: CSCI-6221-FINAL-PROJECT
+python3 -m venv .venv
+source .venv/bin/activate
+
+pip install fastapi uvicorn python-multipart PyPDF2 python-docx openai chromadb
+
+# Download and install nvm:
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+# in lieu of restarting the shell
+\. "$HOME/.nvm/nvm.sh"
+
+# Download and install Node.js:
+nvm install 24
+
+# Verify the Node.js version:
+node -v # Should print "v24.14.1".
+
+# Verify npm version:
+npm -v # Should print "11.11.0".
+
+npm install
+```
+
 You need **two terminals open** — one for the backend, one for the frontend.
 
 ### 1. Backend (FastAPI — port 8000)
 
 ```bash
-# Install dependencies (first time only)
-pip install fastapi uvicorn python-multipart PyPDF2 python-docx openai chromadb
-
 # Start the server
 cd backend
 uvicorn app.main:app --reload
@@ -23,11 +46,8 @@ Backend will be running at `http://localhost:8000`
 ### 2. Frontend (Next.js — port 3000)
 
 ```bash
-# Install dependencies (first time only)
-cd frontend
-npm install
-
 # Start the dev server
+cd frontend
 npm run dev
 ```
 
