@@ -1,9 +1,12 @@
 # CSCI 6221 Advanced Software Paradigms Final Project
 **Professor** Yih-Feng Hwang
 
----
+### JobMatch
 
-## Running Locally
+*Search Smarter, Apply Faster*
+
+
+### Running Locally
 
 **One-time only**
 
@@ -75,7 +78,21 @@ Open `http://localhost:3000` in your browser.
 
 ### Aarifah Ullah
 
-[TODO]
+<p>I worked on on the Vector Search algorithm, combining resume parsing and job scraping all into the algorithm workflow. I integrated the entire backend to work seamlessly together.<br>
+
+The search algorithm takes jobs from the internet and is maintained and stored in a Chroma database. These are stored as OpenAI Text Embeddings (3 Small). The search algorithm takes raw, parsed resume text and converts them into embeddings. These are then queries into the database where the algorithm applies advanced ML techniques like KNN and hybrid search to find the closest embeddings to the query. These results are automatically ranked and users have the option to filter based on standard criteria (location, modality (remote, hybrid, in-person), etc.) </p>
+
+List of accomplishments:
+
+- Created Chroma database. Read through documentation to design customized JobMatch solution.
+- Linked ChromaCloud database and collections with API calls.
+- Connected OpenAI API's to make state-of-the-art embeddings for pulled jobs and resume text.
+- Used Chroma's advanced vector seach algorithms (KNN, hybrid) to search through embedding space.
+- Ranked results that truly match the user's resume using the algorithm's scoring system.
+- Integrated backend successfully, combining resume parsing and job scraping modules.
+- Added over 20 direct company job boards to populate database with over 180+ records.
+- Used MD5 hash to uniquely store different jobs across websites and companies in database.
+- Provided an endpoint for frontend to list search results including (title, company, modality, and location).
 
 ### Raina Jacob
 
