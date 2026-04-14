@@ -15,10 +15,8 @@ client = chromadb.CloudClient(
 )
 
 # OpenAI Client
-os.environ['OPENAI_API_KEY'] = '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'
-
-# Instantiate Embedding Collection
-openai_client = OpenAI()
+openai_key = os.environ.get('$OPENAI_API_KEY')
+openai_client = OpenAI(api_key=openai_key)
 
 """
 # Only need to run once to create collection, but can be left in code for easy reset during development

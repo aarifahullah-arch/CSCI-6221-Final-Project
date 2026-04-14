@@ -1,10 +1,10 @@
-from app.services.job_sources import fetch_targeted_jobs
+from app.services.job_sources import fetch_targeted_jobs, fetch_all_jobs
 from app.services.resume_parser import parse_resume_for_api
 from app.services.vector_store import upsert_jobs, search_jobs
 import tempfile
 import os
 
-
+"""
 # Maps common resume keywords → Remotive search terms
 KEYWORD_SIGNALS = {
     "cybersecurity":      ["cybersecurity", "security analyst", "siem", "splunk", "soc", "firewall", "penetration", "infosec", "vulnerability"],
@@ -23,10 +23,10 @@ KEYWORD_SIGNALS = {
 
 
 def extract_search_keywords(resume_text: str) -> list:
-    """
-    Scan resume text for signals and return up to 3 Remotive search terms
-    that best represent the candidate's profile.
-    """
+
+    # Scan resume text for signals and return up to 3 Remotive search terms
+    # that best represent the candidate's profile.
+    
     text_lower = resume_text.lower()
     matched = []
 
@@ -36,7 +36,7 @@ def extract_search_keywords(resume_text: str) -> list:
 
     # Return top 3 matches, fall back to generic if nothing found
     return matched[:3] if matched else ["software engineer"]
-
+"""
 
 def run_job_match_pipeline(file_bytes: bytes, filename: str = "resume.pdf"):
     # 1. Save uploaded file temporarily, preserving the original extension
@@ -54,11 +54,8 @@ def run_job_match_pipeline(file_bytes: bytes, filename: str = "resume.pdf"):
 
     resume_text = parsed["resume_text"]
 
-    # 3. Extract keywords and fetch targeted jobs
-    keywords = extract_search_keywords(resume_text)
-    print(f"Extracted keywords: {keywords}")
-    jobs = fetch_targeted_jobs(keywords, per_keyword=12)
-    print(f"Fetched {len(jobs)} targeted jobs")
+    # 3. Fetch all jobs from the internet
+    jobs = fetch_all_jobs()
 
     # 4. Store jobs in Chroma
     upsert_jobs(jobs)
