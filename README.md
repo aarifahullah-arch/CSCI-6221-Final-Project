@@ -12,7 +12,7 @@
 python3 -m venv .venv
 source .venv/bin/activate
 
-pip install fastapi uvicorn python-multipart PyPDF2 python-docx openai chromadb
+pip install fastapi uvicorn python-multipart PyPDF2 python-docx textract openai chromadb
 
 # Download and install nvm:
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash

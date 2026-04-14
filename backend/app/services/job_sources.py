@@ -121,10 +121,16 @@ def fetch_targeted_jobs(keywords: List[str], per_keyword: int = 8) -> List[Dict]
 def fetch_all_jobs() -> List[Dict]:
     all_jobs: List[Dict] = []
 
-    all_jobs.extend(fetch_remotive_jobs(limit=10))
+    all_jobs.extend(fetch_remotive_jobs(limit=15))
 
-    greenhouse_boards = ["hubspot", "stripe"]
+    greenhouse_boards = [
+        "hubspot", "stripe",
+        "figma", "carta", "affirm", "cloudflare", "discord", "twilio",
+        "remotecom", "airbnb", "datadog", "flexport", "mercury", "lattice", "gather",
+        "calendly", "betterment", "pagerduty", "ziprecruiter"
+    ]
+
     for board in greenhouse_boards:
-        all_jobs.extend(fetch_greenhouse_jobs(board_token=board, limit=5))
+        all_jobs.extend(fetch_greenhouse_jobs(board_token=board, limit=10))
 
     return all_jobs
