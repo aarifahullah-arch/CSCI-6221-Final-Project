@@ -34,6 +34,8 @@ npm -v # Should print "11.11.0".
 npm install
 ```
 
+Note: You also require an OpenAI API key in your environment path.
+
 You need **two terminals open** — one for the backend, one for the frontend.
 
 ### 1. Backend (FastAPI — port 8000)
