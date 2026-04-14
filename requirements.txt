@@ -1,8 +1,0 @@
-fastapi 
-uvicorn 
-requests 
-chromadb 
-openai 
-PyPDF2 
-python-docx 
-textract
