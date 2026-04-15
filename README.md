@@ -132,4 +132,69 @@ Each job is returned as:
 
 ### Emmanuel Mkandawire
 
-[TODO]
+Reranking Module
+
+### Overview  
+The reranking module is responsible for refining job search results returned by the backend vector search system. While the initial retrieval provides semantically similar jobs, I improve these results by re-ranking them based on how well they match a candidate’s resume. This ensures that users see the most relevant job opportunities first.
+
+### Objective  
+- I reduce irrelevant job results  
+- I prioritize jobs that best match user skills and experience  
+- I provide a structured ranking mechanism for job display  
+
+### Architecture  
+
+backend/reranker/
+├── src/
+│   ├── reranker.py      # Main ranking pipeline
+│   ├── scoring.py       # Final score computation
+│   ├── features.py      # Feature extraction (skills, experience)
+│   ├── explain.py       # (Planned) explanation generation
+│   └── utils.py         # Helper functions
+├── tests/
+│   └── test_scoring.py  # Unit tests
+
+
+### How It Works  
+
+1. **Input**  
+   - I receive jobs from vector search (with `embedding_score`)  
+   - I also take user resume data (skills, experience)
+
+2. **Feature Extraction**  
+   - **Skill Match**: I measure overlap between resume and job skills  
+   - **Experience Match**: I compare required vs actual experience  
+
+3. **Scoring**  
+   I compute a weighted score using:
+
+   Final Score =
+     0.6 × Embedding Score +
+     0.3 × Skill Match +
+     0.1 × Experience Match
+
+4. **Reranking**  
+   - I assign a `final_score` to each job  
+   - I sort jobs in descending order  
+   - The top results represent the best matches  
+
+### Example Output  
+
+[
+  {
+    "title": "Cybersecurity Analyst",
+    "final_score": 0.92
+  },
+  {
+    "title": "Backend Developer",
+    "final_score": 0.81
+  }
+]
+
+
+### Testing  
+
+I validate the module using unit tests to ensure correctness of scoring and ranking logic.
+
+```bash
+python -m tests.test_scoring
