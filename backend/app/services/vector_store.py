@@ -2,16 +2,20 @@ import os
 import re
 import hashlib
 import chromadb
+from dotenv import load_dotenv
 from chromadb import Search, K, Knn
 from chromadb.utils import embedding_functions
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from openai import OpenAI
 
+
+load_dotenv(override=True)
+
 # Chroma Cloud Client
 client = chromadb.CloudClient(
-  api_key='ck-2NARKLQEvdWGxoJSLUUHbncxKMYTGXbY9z4zU72exSSE',
-  tenant='e6524951-7dba-40a9-837a-3260cb58432f',
-  database='job-hunt'
+    api_key=os.getenv("CHROMA_API_KEY"),
+    tenant=os.getenv("CHROMA_TENANT"),
+    database=os.getenv("CHROMA_DATABASE"),
 )
 
 # OpenAI Client
