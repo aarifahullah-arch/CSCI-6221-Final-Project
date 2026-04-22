@@ -76,7 +76,16 @@ Open `http://localhost:3000` in your browser.
 
 ### Bilal Raza
 
-[TODO]
+**Frontend Development & Frontend-Backend Integration**
+
+Developed the frontend resume upload page and job rankings display, and handled the full integration between the frontend and backend systems.
+
+- Built the `ResumeUpload` component with drag-and-drop support, file validation, and upload state management
+- Built the `JobRankDisplay` component with ranked job cards, match score visualization, pagination, and job links
+- Created the Next.js API route (`/api/resume`) to bridge the frontend and FastAPI backend
+- Connected the resume upload flow to the backend pipeline so uploaded resumes are parsed, matched against jobs via vector search, and results are returned and displayed to the user
+- Implemented match score normalization to convert raw vector distances into intuitive percentages
+- Styled both pages to match the site's black and white design theme and added consistent navbar navigation
 
 ### Aarifah Ullah
 
